@@ -6,25 +6,34 @@ const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const path = require("path");
+const fs = require("fs");
+const geminiRoutes = require('./routes/geminiRoutes');
 
-dotenv.config();
-connectDB();
+
+// Enable CORS for your frontend (you can restrict this to your frontend domain in production)
+
+
+// Initialize app first
 const app = express();
+app.use(express.json()); 
+// Now you can use app.use()
+app.use('/api/gemini', geminiRoutes);
 
-app.use(express.json()); // to accept json data
+dotenv.config({ path: "./.env" }); // Load env vars
 
-// app.get("/", (req, res) => {
-//   res.send("API Running!");
-// });
+// console.log("Loaded ENV:", process.env); // Debug print
+// Middleware to parse JSON bodies
 
+// Connect to DB
+connectDB();
+
+// Middleware
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
 
-// --------------------------deployment------------------------------
-
+// Deployment settings
 const __dirname1 = path.resolve();
-
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname1, "/frontend/build")));
 
@@ -37,29 +46,28 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-// --------------------------deployment------------------------------
-
 // Error Handling middlewares
 app.use(notFound);
 app.use(errorHandler);
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000; // Default port to 5000 if not specified in env
 
 const server = app.listen(
   PORT,
   console.log(`Server running on PORT ${PORT}...`.yellow.bold)
 );
 
+// Socket.io setup
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
     origin: "http://localhost:3000",
-    // credentials: true,
   },
 });
 
 io.on("connection", (socket) => {
   console.log("Connected to socket.io");
+
   socket.on("setup", (userData) => {
     socket.join(userData._id);
     socket.emit("connected");
@@ -69,6 +77,7 @@ io.on("connection", (socket) => {
     socket.join(room);
     console.log("User Joined Room: " + room);
   });
+
   socket.on("typing", (room) => socket.in(room).emit("typing"));
   socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
 

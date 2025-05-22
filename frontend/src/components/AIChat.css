@@ -1,0 +1,91 @@
+.ai-chat-icon {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background-color: #0077ff;
+  color: white;
+  border-radius: 50%;
+  padding: 12px;
+  cursor: pointer;
+  z-index: 999;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s;
+}
+
+.ai-chat-icon:hover {
+  transform: scale(1.1);
+}
+
+.ai-chat-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ai-chat-modal {
+  background: white;
+  padding: 20px;
+  width: 350px;
+  height: 400px; /* Set a fixed height for the modal */
+  border-radius: 8px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-chat-modal textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.ai-chat-modal button {
+  background-color: #0077ff;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.ai-chat-modal .close-btn {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  background: transparent;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Add a wrapper around the content */
+.ai-chat-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Make the chat responses scrollable */
+.ai-chat-messages {
+  flex-grow: 1;
+  overflow-y: auto; /* Enable vertical scrolling */
+  padding-right: 10px;
+  max-height: 350px; /* Set a max height for the messages container */
+  margin-bottom: 10px; /* Add some space before the input box */
+}
+
+.ai-answer {
+  background: #f4f4f4;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
